@@ -11,7 +11,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:text="Done"/>
+        android:text="Open"
+        android:focusable="false"
+        android:onClick="clickHandler"/>
     <TextView
         android:layout_marginLeft="10dp"
         android:id="@+id/customerName"

@@ -1,13 +1,20 @@
 package com.panda.coffeeorderadmin.app_admin;
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.TextView;
+import android.widget.*;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.Query;
+import com.firebase.client.core.Repo;
+import com.firebase.client.core.view.QueryParams;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Katsiaryna on 2/17/2015.
@@ -16,9 +23,12 @@ public class OrderAdapter extends BaseAdapter{
 
     private List<Order> orders;
     private LayoutInflater layoutInflater;
+    private Firebase firebaseRef;
+    private final int ORDER_STATUS_CLOSED = 1;
 
-    public OrderAdapter(Context context, List<Order> orders) {
+    public OrderAdapter(Context context, List<Order> orders, Firebase firebaseRef) {
         this.orders = orders;
+        this.firebaseRef = firebaseRef;
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -29,9 +39,6 @@ public class OrderAdapter extends BaseAdapter{
 
     @Override
     public Object getItem(int position) {
-        Object o = orders.get(position);
-        // heeeeeeeeeeeeeeeeeeellllllllllllpppppppppppppppppppppp
-
         return orders.get(position);
     }
 
@@ -41,21 +48,49 @@ public class OrderAdapter extends BaseAdapter{
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View view = convertView;
-        if (view == null) {
-            view = layoutInflater.inflate(R.layout.order_view, parent, false);
-        }
+        final Order order = getOrderInfo(position);
 
-        Order order = getOrderInfo(position);
+        if (view == null)
+            view = layoutInflater.inflate(R.layout.order_view, parent, false);
+
+        final Button buttonDone = (Button)view.findViewById(R.id.buttonStatus);
+        enableButton(order.getOrderStatus() != ORDER_STATUS_CLOSED, buttonDone);
+
+        buttonDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                enableButton(false, buttonDone);
+
+                Order order = getOrderInfo(position);
+                order.setOrderStatus(ORDER_STATUS_CLOSED);
+
+                firebaseRef.child("orders").child(order.getId()).child("orderStatus").setValue(ORDER_STATUS_CLOSED);
+            }
+
+        });
+
+        view.setTag(buttonDone);
+
         TextView textView = (TextView) view.findViewById(R.id.customerName);
         textView.setText(order.getName());
 
         return view;
     }
 
+    private void enableButton(boolean enable, Button buttonDone) {
+        if (!enable) {
+            buttonDone.setEnabled(false);
+            buttonDone.setText("Closed");
+        }
+        else {
+            buttonDone.setEnabled(true);
+            buttonDone.setText("Open");
+        }
+    }
+
     private Order getOrderInfo(int position) {
-        Object o = getItem(position);
         return (Order)getItem(position);
     }
 }
