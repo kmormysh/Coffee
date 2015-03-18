@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <Button
+        android:id="@+id/buttonStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:text="Open"
+        android:focusable="false"
+        android:onClick="clickHandler"/>
+    <TextView
+        android:layout_marginLeft="10dp"
+        android:id="@+id/customerName"
+        android:layout_width="match_parent"
+        android:layout_toLeftOf="@id/buttonStatus"
+        android:layout_centerVertical="true"
+        android:layout_height="wrap_content"
+        android:text="Nothing =("
+        android:textSize="25dp"/>
+    <TextView
+            android:id="@+id/coffeeType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nothing dfgsd=("
+            android:textSize="10dp"
+            android:layout_below="@+id/customerName"
+            android:layout_alignLeft="@+id/customerName"
+            android:layout_alignStart="@+id/customerName"/>
+
+
+
+
+
+</RelativeLayout>
